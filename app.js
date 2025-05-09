@@ -6,14 +6,25 @@ const port = 3000;
 const notFound = require('./middlewares/notFound');
 const errorsHandler = require('./middlewares/handleErrors');
 
+// routers
+const moviesRouter = require('./routers/movies')
+
+// middleware per asset statici
+app.use(express.static('public'));
+
+// middleware per il parsing del body
+app.use(express.json());
 
 
-// rotta principale
+// welcome page
 app.get('/', (req, res) => {
     res.send('web application')
 });
 
-// use middleware errore
+// movies
+app.use('/movies', moviesRouter);
+
+// use middleware errore 404 e 500
 app.use(notFound);
 app.use(errorsHandler);
 
