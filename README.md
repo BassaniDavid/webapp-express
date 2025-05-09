@@ -18,4 +18,3 @@
 ### Bonus Bonus
 - Restituire nella INDEX anche la media delle recensioni dei vostri film;
 Come detto a lezione
-
