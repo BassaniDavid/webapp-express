@@ -4,7 +4,7 @@ const connection = require('../data/db')
 // index
 function index(req, res) {
 
-    const sql = 'SELECT * FROM `movies`';
+    const sql = 'SELECT `movies`.*, AVG(`reviews`.`vote`) AS `media_votazione` FROM `movies` JOIN `reviews` ON `movies`.`id` = `reviews`.`movie_id` GROUP BY movies.id';
 
     connection.query(sql, (err, results) => {
 
