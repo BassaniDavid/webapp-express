@@ -14,7 +14,10 @@ function index(req, res) {
             })
         }
 
-        res.json(results);
+        res.json(results.map(result => ({
+            ...result,
+            image: process.env.IMG_MOVIES_PATH + result.image
+        })));
     })
 
     // res.send('index dei film');
@@ -44,7 +47,11 @@ function show(req, res) {
             })
         }
 
-        const movie = results[0];
+        const movie = {
+            ...results[0],
+            imagePath: process.env.IMG_MOVIES_PATH + results[0].image
+        }
+
 
         // recensioni
 
