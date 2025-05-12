@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
+const cors = require('cors');
 
 // middleware
 const notFound = require('./middlewares/notFound');
@@ -8,6 +9,10 @@ const errorsHandler = require('./middlewares/handleErrors');
 
 // routers
 const moviesRouter = require('./routers/movies')
+
+app.use(cors({
+    origin: process.env.FE_app
+}))
 
 // middleware per asset statici
 app.use(express.static('public'));
