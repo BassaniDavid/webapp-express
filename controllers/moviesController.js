@@ -106,7 +106,29 @@ function storeReview(req, res) {
 
     const { id } = req.params;
 
-    res.send(`aggiunta recensione al film ${id}`)
+    console.log(req.body);
+    const { name, vote, text } = req.body;
+
+    const sql = `INSERT INTO reviews (movie_id, name, vote, text)
+    VALUES (?, ?, ?, ?);`
+
+    connection.query(sql, [id, name, vote, text], (err, results) => {
+
+        if (err) {
+            return console.log(err)
+            // res.status(500).json({
+            //     errorMessage: err.sqlMessage
+            //})
+        }
+
+        res.status(201)
+        res.json({
+            id,
+            name,
+            vote,
+            text
+        })
+    })
 
 }
 
