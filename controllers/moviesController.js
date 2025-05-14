@@ -1,5 +1,7 @@
 // importo file connessione SQL
 const connection = require('../data/db')
+const slugify = require('slugify');
+
 
 // index
 function index(req, res) {
@@ -132,9 +134,44 @@ function storeReview(req, res) {
 
 }
 
+function storeMovie(req, res) {
+
+    const { title, director, genre, release_year, abstract } = req.body;
+
+    const imageName = req.file.filename;
+
+    const sql = `
+    INSERT INTO movies (title, director, genre, release_year, abstract, image)
+    VALUE (?, ?, ?, ?, ?, ?);`
+
+    // const slug = slugify(title, {
+    //     lower: true,
+    //     trim: true
+    // })
+
+
+    connection.query(sql, [title, director, genre, release_year, abstract, imageName], (err, results) => {
+
+        console.log(results);
+
+        if (err) {
+            return res.status(500).json({
+                errorMessage: err.sqlMessage
+            })
+        }
+
+        res.status(201);
+        res.json({ message: 'nuovo libro aggiunto' });
+    }
+    )
+
+
+}
+
 // esporto entrambe le funzioni
 module.exports = {
     index,
     show,
-    storeReview
+    storeReview,
+    storeMovie
 }
