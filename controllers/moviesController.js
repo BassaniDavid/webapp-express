@@ -3,6 +3,7 @@ const connection = require('../data/db')
 const slugify = require('slugify');
 
 
+
 // index
 function index(req, res) {
 
@@ -141,16 +142,16 @@ function storeMovie(req, res) {
     const imageName = req.file.filename;
 
     const sql = `
-    INSERT INTO movies (title, director, genre, release_year, abstract, image)
-    VALUE (?, ?, ?, ?, ?, ?);`
+    INSERT INTO movies (title, director, genre, release_year, abstract, image, slug)
+    VALUE (?, ?, ?, ?, ?, ?, ?);`
 
-    // const slug = slugify(title, {
-    //     lower: true,
-    //     trim: true
-    // })
+    const slug = slugify(title, {
+        lower: true,
+        trim: true
+    })
 
 
-    connection.query(sql, [title, director, genre, release_year, abstract, imageName], (err, results) => {
+    connection.query(sql, [title, director, genre, release_year, abstract, imageName, slug], (err, results) => {
 
         console.log(results);
 

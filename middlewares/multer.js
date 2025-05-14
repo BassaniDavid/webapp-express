@@ -2,10 +2,10 @@ const multer = require('multer');
 const slugify = require('slugify');
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cd) {
-        cd(null, './public/movies')
+    destination: function (req, file, cb) {
+        cb(null, './public/movies')
     },
-    filename: function (req, file, cd) {
+    filename: function (req, file, cb) {
 
         const slugifiedImage = slugify(file.originalname, {
             lower: true,
@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
         })
 
         const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1E9)}-${slugifiedImage}`
-        cd(null, uniqueName);
+        cb(null, uniqueName);
     }
 })
 
