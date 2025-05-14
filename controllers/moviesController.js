@@ -46,7 +46,9 @@ function index(req, res) {
 function show(req, res) {
 
     // recupero id dall URL
-    const { id } = req.params
+    const { id } = req.params;
+
+    console.log(req.body);
 
     // prima query
     const sql = 'SELECT `movies`.*, ROUND(AVG(`reviews`.`vote`), 1) AS `media_votazione` FROM `movies` LEFT JOIN`reviews` ON `movies`.`id` = `reviews`.`movie_id`WHERE movies.id = ?';
@@ -99,8 +101,18 @@ function show(req, res) {
     })
 }
 
+// store
+function storeReview(req, res) {
+
+    const { id } = req.params;
+
+    res.send(`aggiunta recensione al film ${id}`)
+
+}
+
 // esporto entrambe le funzioni
 module.exports = {
     index,
-    show
+    show,
+    storeReview
 }

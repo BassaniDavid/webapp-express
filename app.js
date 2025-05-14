@@ -26,7 +26,7 @@ app.use(cors({
 // middleware per asset statici
 app.use(express.static('public'));
 
-// middleware per il parsing del body (per ora non in uso)
+// middleware per il parsing del body (req.body)
 app.use(express.json());
 
 
