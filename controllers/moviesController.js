@@ -28,7 +28,8 @@ function index(req, res) {
     sql += 'GROUP BY movies.id'
 
     // mi connetto al db passando sql
-    connection.query(sql, (err, results) => {
+    connection.query(sql, preparedParam, (err, results) => {
+
 
         // in caso di errore del db
         if (err) {
@@ -67,7 +68,7 @@ function show(req, res) {
         }
 
         // in caso la risposta sia vuota
-        if (results.length === 0) {
+        if (results.length === 0 || results[0].id === null) {
             return res.status(404).json({
                 errorMessage: 'no movie found',
                 id
