@@ -50,15 +50,15 @@ function index(req, res) {
 function show(req, res) {
 
     // recupero id dall URL
-    const { id } = req.params;
+    const { slug } = req.params;
 
     console.log(req.body);
 
     // prima query
-    const sql = 'SELECT `movies`.*, ROUND(AVG(`reviews`.`vote`), 1) AS `media_votazione` FROM `movies` LEFT JOIN`reviews` ON `movies`.`id` = `reviews`.`movie_id`WHERE movies.id = ?';
+    const sql = 'SELECT `movies`.*, ROUND(AVG(`reviews`.`vote`), 1) AS `media_votazione` FROM `movies` LEFT JOIN`reviews` ON `movies`.`id` = `reviews`.`movie_id`WHERE movies.slug = ?';
 
     // mi connetto al db passando sql e id
-    connection.query(sql, [id], (err, results) => {
+    connection.query(sql, [slug], (err, results) => {
 
         // in caso di errore del db
         if (err) {
@@ -68,17 +68,19 @@ function show(req, res) {
         }
 
         // in caso la risposta sia vuota
-        if (results.length === 0 || results[0].id === null) {
+        if (results.length === 0 || results[0]?.id === null) {
             return res.status(404).json({
                 errorMessage: 'no movie found',
                 id
             })
         }
 
+        const currentResult = results[0];
+
         // salvo la risposta in una constante, variando image aggiungendo il PATH. ciò non influisce sui dati nel db
         const movie = {
-            ...results[0],
-            imagePath: process.env.IMG_MOVIES_PATH + results[0].image
+            ...currentResult,
+            imagePath: process.env.IMG_MOVIES_PATH + currentResult.image
         }
 
         // recensioni
@@ -87,7 +89,7 @@ function show(req, res) {
         const sql = `SELECT * FROM reviews WHERE movie_id = ?`
 
         // se è andata a buon fine, eseguo la seconda query rimanendo all interno della prima
-        connection.query(sql, [id], (err, results) => {
+        connection.query(sql, [currentResult.id], (err, results) => {
 
             // in caso di errore lo stampo in console, ma non è bloccante, semplicemente non visualizzerò le recensioni
             if (err) {
@@ -136,44 +138,10 @@ function storeReview(req, res) {
 
 }
 
-function storeMovie(req, res) {
-
-    const { title, director, genre, release_year, abstract } = req.body;
-
-    const imageName = req.file.filename;
-
-    const sql = `
-    INSERT INTO movies (title, director, genre, release_year, abstract, image, slug)
-    VALUE (?, ?, ?, ?, ?, ?, ?);`
-
-    const slug = slugify(title, {
-        lower: true,
-        trim: true
-    })
-
-
-    connection.query(sql, [title, director, genre, release_year, abstract, imageName, slug], (err, results) => {
-
-        console.log(results);
-
-        if (err) {
-            return res.status(500).json({
-                errorMessage: err.sqlMessage
-            })
-        }
-
-        res.status(201);
-        res.json({ message: 'nuovo libro aggiunto' });
-    }
-    )
-
-
-}
 
 // esporto entrambe le funzioni
 module.exports = {
     index,
     show,
     storeReview,
-    storeMovie
 }
