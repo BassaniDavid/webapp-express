@@ -1,4 +1,4 @@
-# esercizio di oggi: Setup Web App Express
+# Setup Web App Express
 
 ### primi step
 - creare un database con MySQL Workbench
